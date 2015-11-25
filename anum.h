@@ -56,6 +56,16 @@ public:
         return number;
     }
     
+    Anum operator -= (Anum const &num1){
+        *this = *this-num1;
+        return *this;
+    }
+    
+    Anum operator += (Anum const &num1){
+        *this = *this+num1;
+        return *this;
+    }
+    
 };
 
 #endif
