@@ -22,6 +22,7 @@ std::istream& operator >> (std::istream &input, Anum& someNum){
     // declare variables
     char buffer;
     std::vector <int> numvec;
+    int i;
     
     // output instructions and make sure std::ostream is clear by flushing
     //std::cout.flush();
@@ -44,7 +45,6 @@ std::istream& operator >> (std::istream &input, Anum& someNum){
     // infinite loop, adding infinite amount of numbers to numvec
     while (1){
         buffer = input.peek();
-        int i;
         
         if (buffer >= '0' && buffer <= '9') i = (int)(buffer - '0');
         else if (buffer == ' ' || buffer == '\n' || buffer == '\t') break;
@@ -100,7 +100,7 @@ Anum operator + (Anum num1, Anum num2){
                 num1.num[i]-=(10*wholes);
             }
         }
-        //num1.eat();
+        num1.eat();
         return num1;
     }
     // if the signs of both are different, with the first one being larger
@@ -116,7 +116,8 @@ Anum operator + (Anum num1, Anum num2){
                 num1.num[i]+=wholes*10;
             }
         }
-        //num1.eat();
+        num1.eat();
+        if (num1.num.size()==1 && num1.num[0]==0) num1.isNegative = 0;
         return num1;
     }
 
@@ -128,14 +129,26 @@ Anum operator - (Anum num1, Anum num2){
     return num1 + -num2;
 }
 
-int main(int argc, char *argv[]){
+// not complete
+Anum operator * (Anum num1, Anum num2){
     
-    std::cout.sync_with_stdio(false);
+    unsigned halflength1 = num1.num.size()/2;
+    Anum a, b;
+    a.num = std::vector<int>(num1.num.begin(), num1.num.begin()+halflength1);
+    if (!halflength1) b.num = std::vector<int>(num1.num.begin()+halflength1, num1.num.end());
+    else a.isSingleDigit = 1;
     
-    Anum someguy;
-    std::cin >> someguy;
-    std::cout << someguy << std::endl;
-    std::cout << someguy + someguy << std::endl;
+    unsigned halflength2 = num2.num.size()/2;
+    Anum c, d;
+    c.num = std::vector<int>(num2.num.begin(), num2.num.begin()+halflength2);
+    if (!halflength2) d.num = std::vector<int>(num2.num.begin()+halflength2, num2.num.end());
+    else c.isSingleDigit = 1;
     
-    return 0;
+    num1.num.clear();
+    
+    if (a.isSingleDigit && b.isSingleDigit){
+       //
+    }
+    
+    return num1;
 }

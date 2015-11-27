@@ -11,6 +11,7 @@ class Anum {
     
     std::vector <int> num;
     bool isNegative;
+    bool isSingleDigit;
     
     bool is_greater_than(Anum num2){
         
@@ -36,19 +37,55 @@ class Anum {
                 return *this;
             }
             else{
-                num.pop_back();
+                if (num.size()>1) num.pop_back();
             }
         }
         return *this;
     }
     
+    int last_digit(){
+        return (*this).num[0];
+    }
+    
 public:
-    Anum() { num.push_back(0); };
+    Anum() { num.push_back(0); isNegative = 0;};         // Default initializes to 0
+    Anum(char const * num1){              // Allow initialization using a string
+        char buffer;
+        std::vector <int> numvec;
+        
+        isNegative = 0;
+        unsigned counter = 0;
+        buffer = num1[counter];
+        int i;
+        
+        if (buffer == '-') isNegative = 1;
+        if (buffer == '-' || buffer == '+') {
+            counter++;
+            buffer = num1[counter];
+        }
+        
+        while (buffer) {
+            if (buffer >= '0' && buffer <= '9') i = (int)(buffer - '0');
+            else if (buffer == ' ' || buffer == '\n' || buffer == '\t') {std::cout << "nl";break;}
+            else throw std::invalid_argument("String initialization of Anum failed. Invalid argument");
+            
+            numvec.push_back(i);
+            counter++;
+            buffer = num1[counter];
+        }
+        
+        num.clear();
+        for (int j = numvec.size()-1; j >=0; j--) {
+            num.push_back(numvec[j]);
+        }
+    }
+
     
     friend std::ostream& operator << (std::ostream &output, Anum const &someNum);
     friend std::istream& operator >> (std::istream &input,  Anum &someNum);
     friend Anum operator + (Anum num1, Anum num2);
     friend Anum operator - (Anum num1, Anum num2);
+    friend Anum operator * (Anum num1, Anum num2);
     
     Anum operator -() {
         Anum number = *this;
@@ -65,6 +102,13 @@ public:
         *this = *this+num1;
         return *this;
     }
+    
+    Anum operator = (Anum const& num1){
+        num = num1.num;
+        isNegative = num1.isNegative;
+        return num1;
+    }
+    
     
 };
 
