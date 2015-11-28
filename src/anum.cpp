@@ -132,23 +132,45 @@ Anum operator - (Anum num1, Anum num2){
 // not complete
 Anum operator * (Anum num1, Anum num2){
     
-    unsigned halflength1 = num1.num.size()/2;
-    Anum a, b;
-    a.num = std::vector<int>(num1.num.begin(), num1.num.begin()+halflength1);
-    if (!halflength1) b.num = std::vector<int>(num1.num.begin()+halflength1, num1.num.end());
-    else a.isSingleDigit = 1;
+    // make num1 the bigger one
+    if (!num1.is_greater_than(num2)) std::swap(num1, num2);
     
-    unsigned halflength2 = num2.num.size()/2;
-    Anum c, d;
-    c.num = std::vector<int>(num2.num.begin(), num2.num.begin()+halflength2);
-    if (!halflength2) d.num = std::vector<int>(num2.num.begin()+halflength2, num2.num.end());
-    else c.isSingleDigit = 1;
-    
-    num1.num.clear();
-    
-    if (a.isSingleDigit && b.isSingleDigit){
-       //
+    if (num1.num.size()==1 && num2.num.size()==1){
+        long long ans = num1.last_digit()*num2.last_digit();
+        Anum result = ans;
+        return result;
     }
     
+    // If one of them is 0, return 0;
+    if (num1.num.size()==1 && num1.num[0]==0) return num1;
+    if (num2.num.size()==1 && num2.num[0]==0) return num2;
+    
+    // we only want to operate on evenly sized numbers
+    if (num1.num.size()%2==1) num1.num.push_back(0);
+    if (num2.num.size()%2==1) num2.num.push_back(0);
+    
+    // make both equal length
+    while (num2.num.size()<num1.num.size()) num2.num.push_back(0);
+    
+    unsigned halflength = num1.num.size()/2;
+    Anum a, b;
+    b.num = std::vector<int>(num1.num.begin(), num1.num.begin()+halflength);
+    a.num = std::vector<int>(num1.num.begin()+halflength, num1.num.end());
+    Anum c, d;
+    d.num = std::vector<int>(num2.num.begin(), num2.num.begin()+halflength);
+    c.num = std::vector<int>(num2.num.begin()+halflength, num2.num.end());
+    
+    Anum numf = a*c;
+    Anum numh = b*d;
+    Anum numg = (a+b)*(c+d)-numf-numh;
+    
+    num1.num.clear();
+    if (num1.isNegative != num2.isNegative) num1.isNegative = 1;
+    else num1.isNegative = 0;
+    
+    unsigned k = 2*halflength;
+    unsigned l = halflength;
+    
+    num1 = numf.pad(k)+numg.pad(l)+numh;
     return num1;
 }

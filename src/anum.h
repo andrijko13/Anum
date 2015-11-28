@@ -11,8 +11,8 @@ class Anum {
     
     std::vector <int> num;
     bool isNegative;
-    bool isSingleDigit;
     
+    // returns 1 if num is greater than the num in the argument
     bool is_greater_than(Anum num2){
         
         if (num.size() != num2.num.size()){
@@ -31,6 +31,7 @@ class Anum {
         return 0;
     }
     
+    // Used to remove all 0's at the front of an anum
     Anum eat(){
         for (int i = num.size()-1; i >= 0; i--) {
             if (num[i] != 0) {
@@ -43,13 +44,32 @@ class Anum {
         return *this;
     }
     
-    int last_digit(){
+    // pad with x zero's
+    Anum pad(int const &x){
+        for (int y = x; y>0; y--) {num.insert(num.begin(),0);}
+        return *this;
+    }
+    
+    //returns the last digit of the number
+    long long last_digit(){
         return (*this).num[0];
     }
     
 public:
     Anum() { num.push_back(0); isNegative = 0;};         // Default initializes to 0
-    Anum(char const * num1){              // Allow initialization using a string
+    Anum(long long num1){
+        num.clear();
+        isNegative = 0;
+        if (num1 < 0) {isNegative = 1; num1*=-1;}
+        if (num1 < 10) {num.push_back(num1); return;}
+        while ((num1/10) > 0) {
+            num.push_back(num1%10);
+            num1/=10;
+        }
+        // above will leave num1 as a single digit
+        num.push_back(num1%10);
+    }
+    Anum(char const * num1){                      // Allow initialization using a string
         char buffer;
         std::vector <int> numvec;
         
