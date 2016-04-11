@@ -1,3 +1,3 @@
 # Anum
 
-Infinite precision number class.
+Infinite precision number class for personal use.
